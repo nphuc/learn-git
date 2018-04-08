@@ -1,0 +1,128 @@
+<!doctype html>
+<html>
+    <head>
+
+        <meta charset="utf8"/>
+        <style>
+        table {
+            border-collapse: collapse;
+        }
+        
+        tr > td:first-of-type {
+            border: none;
+        }
+        th,td {
+            border:1px solid black;
+        }
+        td {
+            min-width: 30px;
+            height: 1em;
+        }
+        span {
+            display:block;
+            text-align: center;
+            background: white;
+        }
+        .center {
+            text-align: center;
+        }
+        .selected {
+            background-color: yellow;
+            color: green;
+        }
+        .selected::after{
+            content: "✔";
+        }
+        table {
+            margin-left: 40px;
+        }
+
+
+        </style>
+    </head>
+    <body>
+        <div id="container">
+
+        </div>
+        <script>
+            const api = [
+                { 
+                    question:"ban co",
+                    options:[
+                        "chap nhan rui ro",
+                        "co chap",
+                        "thich thu thach",
+                        "cham chi"
+                    ]
+                },
+            ];
+            var question = 1;
+            var optionId = 1;
+            const div = document.querySelector("#container");
+            function firstRow() {
+                const tr = document.createElement("tr");
+                const td = document.createElement("td");
+                
+                tr.appendChild(td);
+                for(let i=1;i<=8;i++) {
+                    const td = document.createElement("td");
+                    td.appendChild(document.createTextNode(i));
+                    td.className="center";
+                    tr.appendChild(td);
+                }
+                return tr;
+            }
+
+            function event(evt) {
+                //console.log(evt.target);
+                const t = evt.target;
+                const p = t.parentNode;
+
+                for(let i=1;i<=8;i++) {
+                    //console.log(p.children[i].querySelector("span"));
+                    p.children[i].querySelector("span").className="";
+                }
+                t.querySelector("span").className="selected";
+            }
+
+            function createRow(option) {
+                const tr = document.createElement("tr");
+                const td = document.createElement("td");
+                td.innerHTML=option;
+                tr.appendChild(td);
+                for(let i=1;i<=8;i++) {
+                    const td = document.createElement("td");
+                    const input = document.createElement("span");
+                    //input.setAttribute("name",`id${question}.${optionId}`);
+                    td.addEventListener("click",event);
+                    
+                    td.appendChild(input);
+                    tr.appendChild(td);
+                }
+                return tr;
+            }
+            function createTable(options) {
+                const table = document.createElement("table");
+                table.appendChild(firstRow());
+                for(let i=0;i<options.length;i++){
+                    const pre = String.fromCharCode("a".charCodeAt(0)+i)+". ";
+                    table.appendChild(createRow(pre+options[i]));
+
+                }
+                question++;
+                return table;
+            }
+            function createQuestion(data) {
+                const d1 = document.createElement("div");
+                const d2 = document.createElement("div");
+                d2.appendChild(document.createTextNode("cau 1. "+data.question));
+                d2.appendChild(createTable(data.options));
+               
+                d1.appendChild(d2);
+                div.appendChild(d1);
+            }
+            createQuestion(api[0]);
+
+        </script>
+    </body>
+</html>
